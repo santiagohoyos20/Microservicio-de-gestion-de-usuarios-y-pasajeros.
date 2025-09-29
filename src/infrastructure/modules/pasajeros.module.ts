@@ -1,7 +1,11 @@
 import { Module } from '@nestjs/common';
-import { PasajerosController } from './pasajeros.controller';
+import { PasajerosController } from '../controllers/pasajeros.controller';
+import { PasajerosService } from '../../services/pasajeros.service';
+import { PrismaModule } from '../../../prisma/prisma.module';
 
 @Module({
-  controllers: [PasajerosController]
+  imports: [PrismaModule],         // <-- Importamos Prisma
+  controllers: [PasajerosController],
+  providers: [PasajerosService],   // <-- Registramos el servicio
 })
 export class PasajerosModule {}
