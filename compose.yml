@@ -1,10 +1,10 @@
 services:
   db:
     image: postgres:16
-    container_name: usuarios_db
+    container_name: auth_db
     restart: unless-stopped
     environment:
-      POSTGRES_DB: usuarios
+      POSTGRES_DB: auth
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
     ports:
@@ -12,15 +12,14 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user -d usuarios"]
+      test: ["CMD-SHELL", "pg_isready -U user -d auth"]
       interval: 10s
       timeout: 5s
       retries: 5
 
   app:
     build: .
-    container_name: usuarios_app
-    restart: unless-stopped
+    container_name: auth_app
     ports:
       - "3000:3000"
     depends_on:

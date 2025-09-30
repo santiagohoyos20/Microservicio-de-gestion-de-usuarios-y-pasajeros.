@@ -1,35 +1,28 @@
-# -------- Etapa 1: Builder --------
+# Etapa de build
 FROM node:20 AS builder
-
-# Carpeta de trabajo dentro del contenedor
 WORKDIR /usr/src/app
 
-# Copiamos package.json y package-lock.json primero
+# Copiar package.json y lockfile primero
 COPY package*.json ./
 
-# Instalamos dependencias
-RUN npm install
+# Instalar dependencias usando npm ci
+RUN npm ci --only=production
 
-# Copiamos el resto del proyecto
+# Copiar el resto del código
 COPY . .
 
-# Generamos cliente de Prisma
-RUN npx prisma generate
-
-# Compilamos NestJS
+# Compilar el proyecto (si es NestJS con TypeScript)
 RUN npm run build
 
-
-# -------- Etapa 2: Runner --------
-FROM node:20
-
+# Etapa final (imagen más liviana)
+FROM node:20-slim AS production
 WORKDIR /usr/src/app
 
-# Copiamos solo lo necesario desde el builder
-COPY --from=builder /usr/src/app ./
+# Copiar dependencias ya instaladas
+COPY --from=builder /usr/src/app/node_modules ./node_modules
 
-# Puerto donde corre NestJS
+# Copiar el código compilado
+COPY --from=builder /usr/src/app/dist ./dist
+
 EXPOSE 3000
-
-# Comando de inicio en producción
-CMD ["npm", "run", "start:prod"]
+CMD ["node", "dist/main"]
