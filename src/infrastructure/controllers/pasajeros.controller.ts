@@ -1,10 +1,14 @@
-import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, Query } from '@nestjs/common';
 
 import { PasajerosService } from '../../services/pasajeros.service';
+import { RecargasClientService } from '../../services/recargas.client.service';
 
 @Controller('pasajeros')
 export class PasajerosController {
-  constructor(private readonly pasajerosService: PasajerosService) {}
+  constructor(
+    private readonly pasajerosService: PasajerosService,
+    private readonly recargasClient: RecargasClientService,
+  ) {}
 
   @Get()
   async findAll() {
@@ -14,6 +18,13 @@ export class PasajerosController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.pasajerosService.findOne(id);
+  }
+
+  @Get(':id/recargas')
+  async getRecargas(@Param('id') id: string, @Query('page') page?: number, @Query('limit') limit?: number) {
+    const pg = Number(page ?? 1);
+    const lm = Number(limit ?? 20);
+    return this.recargasClient.getHistoryByUser(id, pg, lm);
   }
 
   @Post()

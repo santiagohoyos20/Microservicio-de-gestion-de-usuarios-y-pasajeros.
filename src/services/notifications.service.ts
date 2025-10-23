@@ -12,8 +12,12 @@ export class NotificationsService {
   ) {}
 
   async sendRechargeConfirmation(pasajero: any, amount: number) {
+    //AQUI SE COLOCA QUÉ ESTARÁ EN EL EMAIL
     const subject = 'Recarga confirmada';
     const body = `<p>Hola ${pasajero?.nombre ?? 'usuario'}, hemos recibido tu recarga de ${amount}.</p>`;
+    //const body = "NATALIA TE AMO MUCHOOOOOOOOOOO AAAAAAAAAAAAAAAAAAA"
+    
+    
     try {
       await this.emailProvider.sendEmail(pasajero?.email, subject, body);
       if (pasajero?.deviceToken) {
