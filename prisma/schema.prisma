@@ -13,5 +13,5 @@ model pasajero {
   apellido   String
   telefono   String
   email      String @unique(map: "Pasajero_email_key")
-  tarjeta    String
+  tarjeta    String?
 }
