@@ -4,3 +4,13 @@ npm-debug.log
 Dockerfile
 docker-compose.yml
 .env
+.git
+.gitignore
+compose.yml
+docker-compose.override.yml
+.vscode
+.idea
+coverage
+test
+**/*.spec.ts
+*.tgz
